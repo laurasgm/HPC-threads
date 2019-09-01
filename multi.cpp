@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <pthread.h>
+#include <time.h>
 using namespace std;
 
 #define MAX_THREAD 4
@@ -74,6 +75,10 @@ int main (int argc, char **argv)
     int op;
     op = strtol(argv[2], NULL, 10);
 
+    clock_t t0,t1,t2,t3;
+
+
+
 	//llenado
 
     for (int i=0; i<TAM; i++){
@@ -83,7 +88,7 @@ int main (int argc, char **argv)
             m2[i][j]=rand() % 10 + 1;
         }
     }
-
+/*
     //imprimir
     for (int i=0; i<TAM; i++){
 
@@ -102,12 +107,18 @@ int main (int argc, char **argv)
         }
         cout<<endl;
     }
-
+*/
     switch(op){
-      case 1: multi_secuencial(TAM);
-              imprimir_secuencial(TAM);
+      case 1: t0=clock();
+              multi_secuencial(TAM);
+              //imprimir_secuencial(TAM);
+              t1=clock();
+              double tf;
+              tf= ((double) (t1- t0)) / CLOCKS_PER_SEC;
+              cout<<tf<<endl;
               break;
       case 2: // declaramos 4 hilos
+              t2=clock();
               pthread_t threads[MAX_THREAD];
 
               // creando cuatro hilos, cada uno evaluando su propia parte
@@ -121,7 +132,12 @@ int main (int argc, char **argv)
               for (int i = 0; i < MAX_THREAD; i++)
                   pthread_join(threads[i], NULL);
 
-              imprimir_paralelo(TAM);
+              //imprimir_paralelo(TAM);
+              t3=clock();
+              double tf1;
+              tf1= ((double) (t3- t2)) / CLOCKS_PER_SEC;
+              cout<<tf1<<endl;
+
               break;
     }
 

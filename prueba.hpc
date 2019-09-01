@@ -1,0 +1,24 @@
+#!/bin/bash
+# My first script
+
+#compilamos
+g++ -o multi multi.cpp -pthread
+#ejecutamos
+#secuencial 100
+for i in $(seq 1 10); do
+	./multi 100 1 >> datos_sec_100.txt
+done
+#secuencial 10
+for i in $(seq 1 10); do
+        ./multi 10 1 >> datos_sec_10.txt
+done
+#paralelo 100
+for i in $(seq 1 10); do
+        ./multi 100 2 >> datos_paral_100.txt
+done
+#paralelo 10
+for i in $(seq 1 10); do
+        ./multi 10 2 >> datos_paral_10.txt
+done
+
+
