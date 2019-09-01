@@ -7,6 +7,7 @@ using namespace std;
 #define MAX_THREAD 4
 
 //https://www.geeksforgeeks.org/multiplication-matrix-using-pthreads/
+//https://www.tutorialspoint.com/cplusplus/cpp_multithreading.htm#
 //que ingrese por srg el tamañano de la matriz y si va a ser por serie o por paralelo
 //ejecucion
 //g++ -o multi multi.cpp -pthread
