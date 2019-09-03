@@ -14,13 +14,15 @@ using namespace std;
 //g++ -o multi multi.cpp -pthread
 //./multi TAM op
 
-int m1[2][2];
-int m2[2][2];
-int r[2][2];
-int m3[2][2];
+//manejamos matrices dinamicas
+int **m1;
+int **m2;
+int **r;
+int **m3;
 int step_i = 0;
 
 
+//multiplicacion en paralelo
 void* multi(void* arg)
 {
     long TAM;
@@ -31,15 +33,16 @@ void* multi(void* arg)
     for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++)
         for (int j = 0; j < TAM; j++)
             for (int k = 0; k < TAM; k++)
-                m3[i][j] += m1[i][k] * m2[k][j];
+                *(*(m3+i)+j) += *(*(m1+i)+j)  * *(*(m2+i)+j) ;
 }
 
+//multiplicacion en secuencial
 void multi_secuencial(int TAM){
     for(int i=0; i<TAM; i++){
       for(int j=0; j<TAM; j++){
           r[i][j]=0;
           for(int k=0; k<TAM; k++){
-                r[i][j]= r[i][j]+m1[i][k]*m2[k][j];
+                *(*(r+i)+j) = *(*(r+i)+j) +*(*(m1+i)+j) * *(*(m2+i)+j) ;
           }
       }
     }
@@ -50,7 +53,7 @@ void imprimir_secuencial(int TAM){
         << "Multiplicacion secuencial" << endl;
     for (int i=0; i<TAM; i++){
         for (int j=0; j<TAM; j++){
-            cout<<r[i][j]<<" ";
+            cout<<*(*(r+i)+j) <<" ";
         }
         cout<<endl;
     }
@@ -61,7 +64,7 @@ void imprimir_paralelo(int TAM){
          << "Multiplicacion por hilos" << endl;
     for (int i = 0; i < TAM; i++) {
         for (int j = 0; j < TAM; j++)
-            cout << m3[i][j] << " ";
+            cout << *(*(m3+i)+j)  << " ";
         cout << endl;
     }
 }
@@ -77,17 +80,40 @@ int main (int argc, char **argv)
 
     clock_t t0,t1,t2,t3;
 
+  //reservar memoria para la matriz dinamica
+  m1 = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    m1[i]= new int[TAM];//reservando memoria para las columnas
+  }
 
+  //reservar memoria para la matriz dinamica
+  m2 = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    m2[i]= new int[TAM];//reservando memoria para las columnas
+  }
+
+  //reservar memoria para la matriz dinamica
+  r = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    r[i]= new int[TAM];//reservando memoria para las columnas
+  }
+
+  //reservar memoria para la matriz dinamica
+  m3 = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    m3[i]= new int[TAM];//reservando memoria para las columnas
+  }
 
 	//llenado
 
     for (int i=0; i<TAM; i++){
 
         for (int j=0; j<TAM; j++){
-            m1[i][j]=rand() % 10 + 1;
-            m2[i][j]=rand() % 10 + 1;
+            *(*(m1+i)+j) =rand() % 10 + 1;
+            *(*(m2+i)+j) =rand() % 10 + 1;
         }
     }
+//imprime las matrices a multiplicar
 /*
     //imprimir
     for (int i=0; i<TAM; i++){
