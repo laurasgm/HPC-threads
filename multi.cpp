@@ -3,6 +3,7 @@
 #include <iostream>
 #include <pthread.h>
 #include <time.h>
+#include "timer.hh"
 using namespace std;
 
 #define MAX_THREAD 4
@@ -42,7 +43,7 @@ void multi_secuencial(int TAM){
       for(int j=0; j<TAM; j++){
           r[i][j]=0;
           for(int k=0; k<TAM; k++){
-                *(*(r+i)+j) = *(*(r+i)+j) +*(*(m1+i)+j) * *(*(m2+i)+j) ;
+                *(*(r+i)+j) = *(*(r+i)+j) + *(*(m1+i)+j) * *(*(m2+i)+j) ;
           }
       }
     }
@@ -135,16 +136,22 @@ int main (int argc, char **argv)
     }
 */
     switch(op){
-      case 1: t0=clock();
+      case 1: //t0=clock();
+              {
+              ScopedTimer p;
               multi_secuencial(TAM);
               //imprimir_secuencial(TAM);
-              t1=clock();
+              /*t1=clock();
               double tf;
               tf= ((double) (t1- t0)) / CLOCKS_PER_SEC;
-              cout<<tf<<endl;
+              cout<<tf<<endl;*/
+
+              cout<<TAM<<","<<p.elapsed()/1e+6<<endl;
+              }
               break;
       case 2: // declaramos 4 hilos
-              t2=clock();
+              //t2=clock();
+              {ScopedTimer t;
               pthread_t threads[MAX_THREAD];
 
               // creando cuatro hilos, cada uno evaluando su propia parte
@@ -159,11 +166,13 @@ int main (int argc, char **argv)
                   pthread_join(threads[i], NULL);
 
               //imprimir_paralelo(TAM);
-              t3=clock();
+              /*t3=clock();
               double tf1;
               tf1= ((double) (t3- t2)) / CLOCKS_PER_SEC;
-              cout<<tf1<<endl;
-
+              cout<<tf1<<endl;*/
+              t.elapsed();
+              cout<<TAM<<","<<t.elapsed()/1e+6<<endl;
+              }
               break;
     }
 
