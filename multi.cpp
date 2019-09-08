@@ -34,16 +34,16 @@ void* multi(void* arg)
     for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++)
         for (int j = 0; j < TAM; j++)
             for (int k = 0; k < TAM; k++)
-                *(*(m3+i)+j) += *(*(m1+i)+j)  * *(*(m2+i)+j) ;
+                *(*(m3+i)+j) += *(*(m1+k)+j)  * *(*(m2+k)+j) ;
 }
 
 //multiplicacion en secuencial
 void multi_secuencial(int TAM){
     for(int i=0; i<TAM; i++){
       for(int j=0; j<TAM; j++){
-          r[i][j]=0;
+          *(*(r+i)+j)]=0;
           for(int k=0; k<TAM; k++){
-                *(*(r+i)+j) = *(*(r+i)+j) + *(*(m1+i)+j) * *(*(m2+i)+j) ;
+                *(*(r+i)+j) += *(*(m1+i)+k)  * *(*(m2+k)+j) ;
           }
       }
     }
@@ -79,7 +79,6 @@ int main (int argc, char **argv)
     int op;
     op = strtol(argv[2], NULL, 10);
 
-    clock_t t0,t1,t2,t3;
 
   //reservar memoria para la matriz dinamica
   m1 = new int*[TAM];//reservando memoria para las filas
