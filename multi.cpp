@@ -41,7 +41,7 @@ void* multi(void* arg)
 void multi_secuencial(int TAM){
     for(int i=0; i<TAM; i++){
       for(int j=0; j<TAM; j++){
-          *(*(r+i)+j)]=0;
+          *(*(r+i)+j) = 0;
           for(int k=0; k<TAM; k++){
                 *(*(r+i)+j) += *(*(m1+i)+k)  * *(*(m2+k)+j) ;
           }

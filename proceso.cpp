@@ -5,7 +5,8 @@
 #include "timer.hh"
 #include <sys/wait.h>
 
-
+//https://www.geeksforgeeks.org/fork-system-call/
+//https://timmurphy.org/2014/04/26/using-fork-in-cc-a-minimum-working-example/
 
 using namespace std;
 
@@ -48,7 +49,7 @@ int main(int argc, char **argv)
           *(*(m2+i)+j) =rand() % 10 + 1;
       }
   }
-
+  /*
   //imprimir
   for (int i=0; i<TAM; i++){
 
@@ -67,39 +68,42 @@ int main(int argc, char **argv)
       }
       cout<<endl;
   }
-
+  */
   ScopedTimer p;
-  //recuerda que el fork funciona como 2 ^n entonces 2 ^5 nos saca 32 datos o entradas a proceso hijo 
-  for (int i=0; i<5; i++){
-
-    pid = fork();
-    //cout<<"este es pid: "<<pid<<endl;
-    if (pid<0){
-      cout<<"error, el pid es menor a cero";
-    }
-    //child
-    if (pid==0){
-      //cout<<"entre"<<endl;
-      for(int i=0; i<TAM; i++){
-        for(int j=0; j<TAM; j++){
-            r[i][j]=0;
-            for(int k=0; k<TAM; k++){
-              //cout<<"soy m1: "<<*(*(m1+i)+j)<<endl;
-              //cout<<"soy m2: "<<*(*(m2+i)+j)<<endl;
-              *(*(r+i)+j) += *(*(m1+i)+k) * *(*(m2+k)+j) ;
-              //cout<<"soy r: "<<*(*(r+i)+j)<<endl;
-
-            }
+  //recuerda que el fork funciona como 2 ^n entonces 2 ^5 nos saca 32 datos o entradas a proceso hijo
+  //for (int i=0; i<; i++){
+  pid = fork();
+  //cout<<"este es pid: "<<pid<<endl;
+  if (pid<0){
+    cout<<"error, el pid es menor a cero";
+  }
+  //child
+  if (pid==0){
+    cout<<"entre"<<endl;
+    for(int i=0; i<TAM; i++){
+      for(int j=0; j<TAM; j++){
+          *(*(r+i)+j)=0;
+          for(int k=0; k<TAM; k++){
+            //cout<<"soy m1: "<<*(*(m1+i)+j)<<endl;
+            //cout<<"soy m2: "<<*(*(m2+i)+j)<<endl;
+            *(*(r+i)+j) += *(*(m1+i)+k) * *(*(m2+k)+j) ;
+            //cout<<"soy r: "<<*(*(r+i)+j)<<endl;
+          }
         }
       }
-    }
-    //father
-    if (pid>0){
-      wait(0);
+      exit(0);
     }
 
+  //father
+  if (pid>0){
+    wait(0);
   }
+
   cout<<TAM<<","<<p.elapsed()/1e+6<<endl;
+
+
+  //}
+
   /*cout<<endl
       << "Multiplicacion secuencial" << endl;
   for (int i=0; i<TAM; i++){
@@ -108,6 +112,5 @@ int main(int argc, char **argv)
       }
       cout<<endl;
   }*/
-
   return 0;
 }
