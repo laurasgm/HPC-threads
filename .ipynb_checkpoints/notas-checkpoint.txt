@@ -1,0 +1,4 @@
+exclusion mutua y memoria compartida para fork en c++
+shared memory c++
+Speedup que compare hilos con procesos y secuencial con procesos, ambas 
+graficas combinadas
