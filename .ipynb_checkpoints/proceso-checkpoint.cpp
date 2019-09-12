@@ -4,14 +4,11 @@
 #include <unistd.h>
 #include "timer.hh"
 #include <sys/wait.h>
-#include <sys/mman.h>
-#include <sys/shm.h>
+
 //https://www.geeksforgeeks.org/fork-system-call/
 //https://timmurphy.org/2014/04/26/using-fork-in-cc-a-minimum-working-example/
 
 using namespace std;
-
-//double **newGrid = (double **) mmap(NULL, ARRAY_SIZE, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
 
 int **m1;
 int **m2;
@@ -23,11 +20,6 @@ int main(int argc, char **argv)
 {
   int TAM;
   TAM = strtol(argv[1], NULL, 10);
-
-  key_t Clave = ftok ("/bin/ls", 33);
-
-  int id = shmget(Clave, sizeof(int)*TAM, 0777 | IPC_CREAT);
-  int **r = (int **)shmat(id, 0, 0);
 
 
   //reservar memoria para la matriz dinamica
@@ -57,7 +49,7 @@ int main(int argc, char **argv)
           *(*(m2+i)+j) =rand() % 10 + 1;
       }
   }
-
+  /*
   //imprimir
   for (int i=0; i<TAM; i++){
 
@@ -76,49 +68,49 @@ int main(int argc, char **argv)
       }
       cout<<endl;
   }
-
-  int pepito=0;
+  */
   ScopedTimer p;
   //recuerda que el fork funciona como 2 ^n entonces 2 ^5 nos saca 32 datos o entradas a proceso hijo
-    for (int i=0; i<TAM; i++){
-    pid = fork();
-    //cout<<"este es pid: "<<pid<<endl;
-    if (pid<0){
-      cout<<"error, el pid es menor a cero";
-    }
-    //child
-    if (pid==0){
-      //cout<<"entre"<<endl;
-      for(int i=0; i<TAM; i++){
-
-        *(*(r+pepito)+i) += *(*(m1+pepito)+i) * *(*(m2+i)+pepito);
-        //cout<<"soy m1: "<<*(*(m1+i)+j)<<endl;
-        //cout<<"soy m2: "<<*(*(m2+i)+j)<<endl;
-        cout<<"soy r: "<<*(*(r+pepito)+i)<<endl;
+  //for (int i=0; i<; i++){
+  pid = fork();
+  //cout<<"este es pid: "<<pid<<endl;
+  if (pid<0){
+    cout<<"error, el pid es menor a cero";
+  }
+  //child
+  if (pid==0){
+    cout<<"entre"<<endl;
+    for(int i=0; i<TAM; i++){
+      for(int j=0; j<TAM; j++){
+          *(*(r+i)+j)=0;
+          for(int k=0; k<TAM; k++){
+            //cout<<"soy m1: "<<*(*(m1+i)+j)<<endl;
+            //cout<<"soy m2: "<<*(*(m2+i)+j)<<endl;
+            *(*(r+i)+j) += *(*(m1+i)+k) * *(*(m2+k)+j) ;
+            //cout<<"soy r: "<<*(*(r+i)+j)<<endl;
+          }
+        }
       }
       exit(0);
     }
 
-    //father
-    if (pid>0){
-      pepito+=1;
-    }
+  //father
+  if (pid>0){
+    wait(0);
   }
-  wait(0);
 
-  //cout<<"hola soy pepito "<<pepito<<endl;
   cout<<TAM<<","<<p.elapsed()/1e+6<<endl;
-  shmdt(r);
-  shmctl(id,IPC_RMID,NULL);
+
+
   //}
 
-  cout<<endl
-      << "Multiplicacion fork" << endl;
+  /*cout<<endl
+      << "Multiplicacion secuencial" << endl;
   for (int i=0; i<TAM; i++){
       for (int j=0; j<TAM; j++){
           cout<<*(*(r+i)+j) <<" ";
       }
       cout<<endl;
-  }
+  }*/
   return 0;
 }

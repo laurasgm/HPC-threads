@@ -1,0 +1,14 @@
+#!/bin/bash
+# My first script
+
+#compilamos
+g++ -o proceso proceso.cpp
+#ejecutamos
+
+for i in $(seq 1 31); do
+  ./proceso 100 >> datos_fork.txt
+  ./proceso 250 >> datos_fork.txt
+  ./proceso 500 >> datos_fork.txt
+  ./proceso 750 >> datos_fork.txt
+  ./proceso 1000 >> datos_fork.txt
+done
