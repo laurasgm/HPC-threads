@@ -24,10 +24,9 @@ int main(int argc, char **argv)
   int TAM;
   TAM = strtol(argv[1], NULL, 10);
 
-  key_t Clave = ftok ("/bin/ls", 33);
-
-  int id = shmget(Clave, sizeof(int)*TAM, 0777 | IPC_CREAT);
-  int **r = (int **)shmat(id, 0, 0);
+  //key_t Clave = ftok ("/bin/ls", 33);
+  //int id = shmget(Clave, sizeof(int)*TAM, 0777 | IPC_CREAT);
+  //int **r = (int **)shmat(id, 0, 0);
 
 
   //reservar memoria para la matriz dinamica
