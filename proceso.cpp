@@ -1,4 +1,4 @@
-#include <stdio.h>
+  #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
 #include <unistd.h>
@@ -15,6 +15,7 @@ using namespace std;
 
 int **m1;
 int **m2;
+int **m3;
 int **r;
 int pid;
 
@@ -41,6 +42,12 @@ int main(int argc, char **argv)
     m2[i]= new int[TAM];//reservando memoria para las columnas
   }
 
+  //reservar memoria para la matriz dinamica ... matriz transpuesta
+  m3 = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    m3[i]= new int[TAM];//reservando memoria para las columnas
+  }
+
   //reservar memoria para la matriz dinamica
   r = new int*[TAM];//reservando memoria para las filas
   for (int i=0;i<TAM;i++){
@@ -54,6 +61,13 @@ int main(int argc, char **argv)
       for (int j=0; j<TAM; j++){
           *(*(m1+i)+j) =rand() % 10 + 1;
           *(*(m2+i)+j) =rand() % 10 + 1;
+      }
+  }
+
+//transpuesta
+  for (int i=0; i<TAM; i++){
+      for (int j=0; j<TAM; j++){
+          *(*(m3+j)+i) = *(*(m2+i)+j);
       }
   }
 /*
@@ -71,7 +85,7 @@ int main(int argc, char **argv)
   for (int i=0; i<TAM; i++){
 
       for (int j=0; j<TAM; j++){
-          cout<<m2[i][j]<<"\t";
+          cout<<m3[i][j]<<"\t";
       }
       cout<<endl;
   }
@@ -92,9 +106,9 @@ int main(int argc, char **argv)
         for(int i=0; i<TAM; i++){
           for(int j=0; j<TAM; j++){
             //*(*(r+pepito)+cont) += *(*(m1+pepito)+i) * *(*(m2+i)+pepito);
-            *(*(r+pepito)+i) += *(*(m1+pepito)+j) * *(*(m2+j)+i);
+            *(*(r+pepito)+i) += *(*(m1+pepito)+j) * *(*(m3+i)+j);
             //cout<<"soy m1: "<<*(*(m1+pepito)+j)<<endl;
-            //cout<<"soy m2: "<<*(*(m2+j)+i)<<endl;
+            //cout<<"soy m2: "<<*(*(m3+i)+j)<<endl;
             //cout<<"soy r: "<<*(*(r+pepito)+i)<<endl;
 
             //cout<<"soy m1: "<<*(*(m1+pepito)+i)<<endl;
@@ -111,7 +125,7 @@ int main(int argc, char **argv)
         //cout<<"soy cont"<<cont<<endl;
         //cout<<"soy pepito"<<pepito<<endl;
         //cont+=1;
-        pepito+=1;
+        //pepito+=1;
         wait(0);
       }
     }

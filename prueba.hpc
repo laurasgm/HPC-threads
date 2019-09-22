@@ -2,16 +2,13 @@
 # My first script
 
 #compilamos
-g++ -o multi multi.cpp -pthread
+g++ -O3 -o multi multi.cpp -pthread
 #ejecutamos
 #secuencial 100
 for i in $(seq 1 31); do
-	./multi 100 1 >> datos_sec.txt
-    ./multi 250 1 >> datos_sec.txt
-    ./multi 500 1 >> datos_sec.txt
-    ./multi 750 1 >> datos_sec.txt
-    ./multi 1000 1 >> datos_sec.txt
+	./multi 100 1 >> datos_sec_op.txt
+    ./multi 250 1 >> datos_sec_op.txt
+    ./multi 500 1 >> datos_sec_op.txt
+    ./multi 750 1 >> datos_sec_op.txt
+    ./multi 1000 1 >> datos_sec_op.txt
 done
-
-
-

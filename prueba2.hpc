@@ -6,11 +6,9 @@ g++ -o multi multi.cpp -pthread
 #ejecutamos
 #secuencial 100
 for i in $(seq 1 31); do
-        ./multi 100 2 >> datos_paralelo.txt
-        ./multi 250 2 >> datos_paralelo.txt
-        ./multi 500 2 >> datos_paralelo.txt
-        ./multi 750 2 >> datos_paralelo.txt
-        ./multi 1000 2 >> datos_paralelo.txt
+        ./multi 100 2 >> datos_paralelo_trans.txt
+        ./multi 250 2 >> datos_paralelo_trans.txt
+        ./multi 500 2 >> datos_paralelo_trans.txt
+        ./multi 750 2 >> datos_paralelo_trans.txt
+        ./multi 1000 2 >> datos_paralelo_trans.txt
 done
-
-

@@ -34,7 +34,7 @@ void* multi(void* arg)
     for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++)
         for (int j = 0; j < TAM; j++)
             for (int k = 0; k < TAM; k++)
-                *(*(m3+i)+j) += *(*(m1+k)+j)  * *(*(m2+k)+j) ;
+                *(*(m3+i)+j) += *(*(m1+i)+k)  * *(*(m3+j)+k) ;//transpuesta activa
 }
 
 //multiplicacion en secuencial
@@ -106,13 +106,22 @@ int main (int argc, char **argv)
 
 	//llenado
 
-    for (int i=0; i<TAM; i++){
+  for (int i=0; i<TAM; i++){
 
-        for (int j=0; j<TAM; j++){
-            *(*(m1+i)+j) =rand() % 10 + 1;
-            *(*(m2+i)+j) =rand() % 10 + 1;
-        }
-    }
+      for (int j=0; j<TAM; j++){
+          *(*(m1+i)+j) =rand() % 10 + 1;
+          *(*(m2+i)+j) =rand() % 10 + 1;
+      }
+  }
+
+  //transpuesta
+  for (int i=0; i<TAM; i++){
+
+      for (int j=0; j<TAM; j++){
+          *(*(m3+j)+i) = *(*(m2+i)+j);
+      }
+  }
+
 //imprime las matrices a multiplicar
 /*
     //imprimir
