@@ -2,7 +2,7 @@
 # My first script
 
 #compilamos
-g++ -o multi multi.cpp -pthread
+g++ -o multi2 multi.cpp -pthread
 #ejecutamos
 #secuencial 100
 for i in $(seq 1 31); do

@@ -20,6 +20,7 @@ int **m1;
 int **m2;
 int **r;
 int **m3;
+int **m4;
 int step_i = 0;
 
 
@@ -34,7 +35,8 @@ void* multi(void* arg)
     for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++)
         for (int j = 0; j < TAM; j++)
             for (int k = 0; k < TAM; k++)
-                *(*(m3+i)+j) += *(*(m1+i)+k)  * *(*(m3+j)+k) ;//transpuesta activa
+                *(*(m3+i)+j) += *(*(m1+i)+k) * *(*(m4+j)+k);//transpuesta activa
+
 }
 
 //multiplicacion en secuencial
@@ -104,6 +106,12 @@ int main (int argc, char **argv)
     m3[i]= new int[TAM];//reservando memoria para las columnas
   }
 
+  //reservar memoria para la matriz dinamica
+  m4 = new int*[TAM];//reservando memoria para las filas
+  for (int i=0;i<TAM;i++){
+    m4[i]= new int[TAM];//reservando memoria para las columnas
+  }
+
 	//llenado
 
   for (int i=0; i<TAM; i++){
@@ -118,7 +126,7 @@ int main (int argc, char **argv)
   for (int i=0; i<TAM; i++){
 
       for (int j=0; j<TAM; j++){
-          *(*(m3+j)+i) = *(*(m2+i)+j);
+          *(*(m4+j)+i) = *(*(m2+i)+j);
       }
   }
 
@@ -138,7 +146,7 @@ int main (int argc, char **argv)
     for (int i=0; i<TAM; i++){
 
         for (int j=0; j<TAM; j++){
-            cout<<m2[i][j]<<"\t";
+            cout<<m4[i][j]<<"\t";
         }
         cout<<endl;
     }
