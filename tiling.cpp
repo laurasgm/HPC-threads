@@ -13,9 +13,40 @@ using namespace std;
 int **m1;
 int **m2;
 int **r;
+//int *tem;
 int step_i = 0;
 
 
+//multiplicacion en paralelo
+void* multi(void* arg)
+{
+    long TAM;
+    TAM = (long)arg;
+    int core = step_i++;
+    int TAM_TILED = 4;
+
+
+   // Each thread computes 1/4th of matrix multiplication
+        //for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++){
+            for (int ii=0; ii<TAM; ii+=TAM_TILED){
+                for(int jj=0; jj<TAM; jj+=TAM_TILED){
+                    for(int kk=0; kk<TAM; kk+=TAM_TILED){
+                        
+                        for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++){
+                            for(int j=jj; j<MIN(jj+TAM_TILED,TAM); j++){
+                                int temp=0;
+                                for(int k=kk; k< MIN(kk+TAM_TILED,TAM); k++){
+                                    temp += *(*(m1+i)+k) * *(*(m2+k)+j);                   
+                                }
+                                *(*(r+i)+j) += temp;
+                            }
+                        }
+                    }
+                }
+          //  }
+        }
+
+}
 
 
 
@@ -31,11 +62,9 @@ void imprimir_paralelo(int TAM){
 
 int main (int argc, char **argv)
 {
-    // argc es 3 = argv[0]nombre del programa,argv[1]TAM,argv[2]TAM_TILED
+    // argc es 3 = argv[0]nombre del programa,argv[1]TAM
     int TAM;
     TAM = strtol(argv[1], NULL, 10);
-    int TAM_TILED;
-    TAM_TILED = strtol(argv[2], NULL, 10);
 
 
     //reservar memoria para la matriz dinamica
@@ -85,7 +114,7 @@ int main (int argc, char **argv)
         }
         cout<<endl;
     }
-    
+    fflush(stdin); 
 
     ScopedTimer t;
     pthread_t threads[MAX_THREAD];
@@ -93,29 +122,10 @@ int main (int argc, char **argv)
     // creando cuatro hilos, cada uno evaluando su propia parte
     for (int i = 0; i < MAX_THREAD; i++) {
 
-        int core = step_i++;
+        pthread_create(&threads[i], NULL, multi, (void *)TAM);
 
-    // Each thread computes 1/4th of matrix multiplication
-        for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++)
-            for (int ii=0; ii<TAM; ii+=TAM_TILED){
-                for(int jj=0; jj<TAM; jj+=TAM_TILED){
-                    for(int kk=0; kk<TAM; kk+=TAM_TILED){
-
-                        for(int pepito=ii; pepito<MIN(ii+TAM_TILED,TAM); pepito++){
-                            for(int j=jj; j<MIN(jj+TAM_TILED,TAM); j++){
-                                int tem = 0;
-                                for(int k=kk; k< MIN(kk+TAM_TILED,TAM); k++){
-                                    tem += *(*(m1+pepito)+k)  * *(*(m2+k)+j);  
-                                    //cout<<"tem " <<tem;
-                                }
-                                *(*(r+pepito)+j) += tem;
-                            }
-                        }
-                    }
-                }
-        }
+    
     }
-
     // joining and waiting for all threads to complete
     //Join thread:The function returns when the thread execution has completed.
     for (int i = 0; i < MAX_THREAD; i++)
