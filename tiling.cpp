@@ -9,6 +9,11 @@ using namespace std;
 #define MAX_THREAD 4
 #define MIN(A,B) (((A)<(B))?(A):(B))
 
+
+/*para volver a enteros elimine la variable a, y genere el random de la siguiente manera
+    rand() % 10 + 1
+    tambien cambie todo los float a int*/
+
 //manejamos matrices dinamicas
 float **m1;
 float **m2;
@@ -34,7 +39,7 @@ void* multi(void* arg)
                         
                         for (int i = core * TAM / 4; i < (core + 1) * TAM / 4; i++){
                             for(int j=jj; j<MIN(jj+TAM_TILED,TAM); j++){
-                                int temp=0;
+                                float temp=0;
                                 for(int k=kk; k< MIN(kk+TAM_TILED,TAM); k++){
                                     temp += *(*(m1+i)+k) * *(*(m2+k)+j);                   
                                 }
@@ -85,22 +90,23 @@ int main (int argc, char **argv)
         r[i]= new float[TAM];//reservando memoria para las columnas
     }
 
-
+    
     //llenado
+    float a = 10.0;
     for (int i=0; i<TAM; i++){
         for (int j=0; j<TAM; j++){
-            *(*(m1+i)+j) =(float)rand() / (float)10 + 1;
-            *(*(m2+i)+j) =(float)rand() / (float)10 + 1;
+            *(*(m1+i)+j) =((float)rand()/(float)(RAND_MAX)) * a;
+            *(*(m2+i)+j) =((float)rand()/(float)(RAND_MAX)) * a;
         }
     }
 
     //imprime las matrices a multiplicar
- 
+    /*
     //imprimir
     for (int i=0; i<TAM; i++){
 
         for (int j=0; j<TAM; j++){
-            cout<<m1[i][j]<<"\t";
+            cout<<m1[i][j]<<"  ";
         }
         cout<<endl;
     }
@@ -110,10 +116,10 @@ int main (int argc, char **argv)
     for (int i=0; i<TAM; i++){
 
         for (int j=0; j<TAM; j++){
-            cout<<m2[i][j]<<"\t";
+            cout<<m2[i][j]<<"  ";
         }
         cout<<endl;
-    }
+    }*/
     fflush(stdin); 
 
     ScopedTimer t;
@@ -131,7 +137,7 @@ int main (int argc, char **argv)
     for (int i = 0; i < MAX_THREAD; i++)
         pthread_join(threads[i], NULL);
 
-    imprimir_paralelo(TAM);
+    //imprimir_paralelo(TAM);
     /*t3=clock();
     double tf1;
     tf1= ((double) (t3- t2)) / CLOCKS_PER_SEC;
