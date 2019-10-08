@@ -10,9 +10,9 @@ using namespace std;
 #define MIN(A,B) (((A)<(B))?(A):(B))
 
 //manejamos matrices dinamicas
-int **m1;
-int **m2;
-int **r;
+float **m1;
+float **m2;
+float **r;
 //int *tem;
 int step_i = 0;
 
@@ -23,7 +23,7 @@ void* multi(void* arg)
     long TAM;
     TAM = (long)arg;
     int core = step_i++;
-    int TAM_TILED = 4;
+    int TAM_TILED = TAM*sizeof(double);
 
 
    // Each thread computes 1/4th of matrix multiplication
@@ -68,34 +68,34 @@ int main (int argc, char **argv)
 
 
     //reservar memoria para la matriz dinamica
-    m1 = new int*[TAM];//reservando memoria para las filas
+    m1 = new float*[TAM];//reservando memoria para las filas
     for (int i=0;i<TAM;i++){
-        m1[i]= new int[TAM];//reservando memoria para las columnas
+        m1[i]= new float[TAM];//reservando memoria para las columnas
     }
 
     //reservar memoria para la matriz dinamica
-    m2 = new int*[TAM];//reservando memoria para las filas
+    m2 = new float*[TAM];//reservando memoria para las filas
     for (int i=0;i<TAM;i++){
-        m2[i]= new int[TAM];//reservando memoria para las columnas
+        m2[i]= new float[TAM];//reservando memoria para las columnas
     }
 
     //reservar memoria para la matriz dinamica
-    r = new int*[TAM];//reservando memoria para las filas
+    r = new float*[TAM];//reservando memoria para las filas
     for (int i=0;i<TAM;i++){
-        r[i]= new int[TAM];//reservando memoria para las columnas
+        r[i]= new float[TAM];//reservando memoria para las columnas
     }
 
 
     //llenado
     for (int i=0; i<TAM; i++){
         for (int j=0; j<TAM; j++){
-            *(*(m1+i)+j) =rand() % 10 + 1;
-            *(*(m2+i)+j) =rand() % 10 + 1;
+            *(*(m1+i)+j) =(float)rand() / (float)10 + 1;
+            *(*(m2+i)+j) =(float)rand() / (float)10 + 1;
         }
     }
 
     //imprime las matrices a multiplicar
-    
+ 
     //imprimir
     for (int i=0; i<TAM; i++){
 

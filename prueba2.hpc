@@ -4,7 +4,7 @@
 #compilamos
 g++ -o multi2 multi.cpp -pthread
 #ejecutamos
-#secuencial 100
+
 for i in $(seq 1 31); do
         ./multi 100 2 >> datos_paralelo_trans.txt
         ./multi 250 2 >> datos_paralelo_trans.txt

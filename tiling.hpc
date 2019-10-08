@@ -1,0 +1,13 @@
+#!/bin/bash
+# My first script
+
+#compilamos
+g++ -o tiled tiling.cpp -pthread
+#ejecutamos
+for i in $(seq 1 31); do
+        ./tiled 100 >> datos_tiling_float.txt
+        ./tiled 250 >> datos_tiling_float.txt
+        ./tiled 500 >> datos_tiling_float.txt
+        ./tiled 750 >> datos_tiling_float.txt
+        ./tiled 1000 >> datos_tiling_float.txt
+done
